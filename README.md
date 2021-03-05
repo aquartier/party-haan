@@ -67,7 +67,7 @@ This application uses npm scripts for testing and development.
 
 ## Backend API Endpoints
 
-### `POST /auth/login`: Authenticate user
+### `POST /auth/login`: Authenticate User
 This endpoint authenticates a user. An example of the payload (input data) is provided below. The token will be stored in the local storage of the web client for using along with all afterwards API requests:
 ```
 {
@@ -86,7 +86,7 @@ The output returns JWT token and user object:
 }
 ```
 
-### `POST /auth/register`: Register new user
+### `POST /auth/register`: Register new User
 This endpoint registers a new user. An example of the payload (input data) is provided below:
 ```
 {
@@ -155,5 +155,5 @@ response = {
 ### `GET /parties/:id`: Get a Party by ID
 This endpoint returns a single Party by ID. The ID is provided as a URI parameter. The output is the same as from `POST /parties`
 
-### `POST /parties/:id/join`: Link the user to the party (join the party)
+### `POST /parties/:id/join`: Link the User to the Party (join the Party)
 This endpoint will create the relatation between a given Party and the authenticated user. The output formats are the same as in `POST /parties`
