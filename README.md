@@ -2,6 +2,10 @@
 <div align="center">
 A full-stack JS project for SCB 10x code challenge
 </div>
+</br>
+</br>
+
+![Image](./docs/ss-1.png?raw=true)
 
 ## Folder Structure
 ```
@@ -153,4 +157,3 @@ This endpoint returns a single Party by ID. The ID is provided as a URI paramete
 
 ### `POST /parties/:id/join`: Link the user to the party (join the party)
 This endpoint will create the relatation between a given Party and the authenticated user. The output formats are the same as in `POST /parties`
-
