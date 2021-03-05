@@ -1,70 +1,156 @@
-# Getting Started with Create React App
+<h1 align="center">PARTY HAAAANNN</h1>
+<div align="center">
+A full-stack JS project for SCB 10x code challenge
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Folder Structure
+```
+app
+  migrations
+  scripts
+  client
+  server
+  package.json
+  README.md
+  .env.example
+```
 
-## Available Scripts
+## Features
+- Frontend (React) - bootstrapped with extended and modified from [create-react-app](https://github.com/facebookincubator/create-react-app)
+- Backend (Express) - with [MassiveJS](https://massivejs.org/) for a barely scratching the surface of PostgreSQL ability.
+- JWT based authentication - using passport-jwt and passport-local.
 
-In the project directory, you can run:
+## Prerequisites
+Before installing, please make sure to have below tools installed
+* [node v10 or higher](https://nodejs.org/en/download/)
+* [PostgreSQL](https://www.postgresql.org/download/)
 
-### `yarn start`
+## Installation
+1. Execute `npm install` or `yarn` to configure the local environment.
+2. Create `.env` file and define environmental variables (see `.env.example` for example)
+3. Perform DB initialization, migration and seeding with `npm run db:seed`
+4. Build the production version `npm run build`
+5. Start the server to serve the FE and BE applications `npm run server`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Sample Users (from seed)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Now, you can play around with the application using the pre-built users from seed data.
+```
+Email: john@party.haan
+Password: password
 
-### `yarn test`
+Email: joe@party.haan
+Password: password
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Email: jane@party.haan
+Password: password
+```
 
-### `yarn build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This application uses npm scripts for testing and development.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* `$ npm run build`: build the production bundle
+* `$ npm run server`: run in production mode
+* `$ npm run client`: run the development server for FE development
+* `$ npm run server:dev`: run the development server for BE development
+* `$ npm run db:seed`: perform DB initialization, migration and seeding
+* `$ npm run pg-migrate`: alias of `node-pg-migrate` node module
+* `$ npm run db:migrate`: run DB migration scripts
+* `$ npm run test:client`: run all tests for FE
+* `$ npm run test:server`: run all tests for BE
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+## Backend API Endpoints
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `POST /auth/login`: Authenticate user
+This endpoint authenticates a user. An example of the payload (input data) is provided below. The token will be stored in the local storage of the web client for using along with all afterwards API requests:
+```
+{
+    email: String,
+    password: String,
+}
+```
+The output returns JWT token and user object:
+```
+{
+    statusCode: 200,
+    body: {
+        token: String,
+        user: Object,
+    }
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `POST /auth/register`: Register new user
+This endpoint registers a new user. An example of the payload (input data) is provided below:
+```
+{
+    email: String,
+    firstname: String,
+    lastname: String,
+    password: String,
+}
+```
+The output is the same as from `POST /auth/login`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### `GET /auth/me`: Get current User
+This endpoint returns the user object associated with the currently authenticated user. No input data is required. The output is provided is an object with the following structure:
+```
+{
+    statusCode: 200,
+    body: {
+        id: Number,
+        email: String,
+        firstname: String,
+        lastname: String,
+        created_at: Date,
+    }
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `POST /parties`: Create a new Party
+This endpoint creates a new Party with current user as one of the party member. An example of the payload (input data) is provided below:
+```
+body: {
+    name: String,
+    detail: Text,
+    size: Number,
+    price: Number,
+}
+```
+The output returns back the provided data with the generated id along with the users data assosiated with this party:
+```
+response = {
+    statusCode: 200,
+    body: {
+        name: String,
+        detail: Text,
+        size: Number,
+        price: Number,
+        users: [ Object ],
+    }
+}
+```
 
-## Learn More
+### `GET /parties`: Get all Parties
+This endpoint returns the complete set of Parties. No input data is required.
+The output is provided in array with each object having the structure described above:
+```
+response = {
+    statusCode: 200,
+    body: [
+            Party1,
+            Party2,
+            ...
+            PartyN
+        ]
+    }
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### `GET /parties/:id`: Get a Party by ID
+This endpoint returns a single Party by ID. The ID is provided as a URI parameter. The output is the same as from `POST /parties`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `POST /parties/:id/join`: Link the user to the party (join the party)
+This endpoint will create the relatation between a given Party and the authenticated user. The output formats are the same as in `POST /parties`
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
